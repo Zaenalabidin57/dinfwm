@@ -371,7 +371,6 @@ void update_bar() {
     XFlush(d);
 }
 
-int lastupdate = 0;
 int main(void) {
     XEvent ev;
 
