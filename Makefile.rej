@@ -1,0 +1,11 @@
+--- Makefile
++++ Makefile
+@@ -10,7 +10,7 @@ config.h:
+ 	cp config.def.h config.h
+ 
+ dfwm:
+-	$(CC) -O3 $(CFLAGS) -o dfwm dfwm.c -lX11 $(LDFLAGS)
++	$(CC) -O3 $(CFLAGS) -o dfwm dfwm.c -lX11 -lXinerama $(LDFLAGS)
+ 
+ install: all
+ 	install -Dm755 dfwm $(DESTDIR)$(BINDIR)/dfwm
