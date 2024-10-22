@@ -1,7 +1,7 @@
 CFLAGS += -std=c99 -Wall -Wextra -pedantic -Wold-style-declaration
 CFLAGS += -Wmissing-prototypes -Wno-unused-parameter
-CFLAGS += $(shell pkg-config --cflags freetype2 xft x11)
-LIBS = $(shell pkg-config --libs x11 xft freetype2)
+CFLAGS += $(shell pkg-config --cflags freetype2 xft x11 xinerama)
+LIBS = $(shell pkg-config --libs x11 xft freetype2 xinerama)
 LIBS += -lm -pthread
 PREFIX ?= /usr
 BINDIR ?= $(PREFIX)/bin

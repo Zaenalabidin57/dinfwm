@@ -34,6 +34,8 @@ typedef struct client {
     Window w;
 } client;
 
+int multimonitor_action(int action);
+
 void killclient(const Arg arg);
 unsigned long get_color(const char *col);
 void button_press(XEvent *e);

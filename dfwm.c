@@ -2,6 +2,7 @@
 #include <X11/XF86keysym.h>
 #include <X11/keysym.h>
 #include <X11/XKBlib.h>
+#include <X11/extensions/Xinerama.h>
 #include <X11/Xft/Xft.h>
 #include <stdlib.h>
 #include <signal.h>
@@ -10,7 +11,7 @@
 #include "dfwm.h"
 
 static client *list = {0}, *ws_list[10] = {0}, *cur;
-static int ws = 1, sw, sh, wx, wy, numlock = 0;
+static int ws = 1, sw, sh, wx, wy, numlock = 0, monitors;
 static unsigned int ww, wh;
 
 static int s;
@@ -149,11 +150,37 @@ void win_kill(const Arg arg) {
     if (cur) XKillClient(d, cur->w);
 }
 
+int multimonitor_action (int action) { // action = 0 -> center; action = 1 -> fs
+    if (!XineramaIsActive(d)) return 1;
+    XineramaScreenInfo *si = XineramaQueryScreens(d, &monitors);
+    for (int i = 0; i < monitors; i++) {
+        if ((cur->wx + (cur->ww/2) >= (unsigned int)si[i].x_org
+                && cur->wx + (cur->ww/2) < (unsigned int)si[i].x_org + si[i].width)
+            && ( cur->wy + (cur->wh/2) >= (unsigned int)si[i].y_org
+                && cur->wy + (cur->wh/2) < (unsigned int)si[i].y_org + si[i].height)) {
+            if (action)
+                XMoveResizeWindow(d, cur->w,
+                                  si[i].x_org, si[i].y_org,
+                                  si[i].width, si[i].height);
+            else
+                XMoveWindow(d, cur->w,
+                            si[i].x_org + ((si[i].width - ww)/2),
+                            si[i].y_org + ((si[i].height -wh)/2));
+            break;
+        }
+    }
+    return 0;
+}
+
 void win_center(const Arg arg) {
     if (!cur) return;
 
     win_size(cur->w, &(int){0}, &(int){0}, &ww, &wh);
-    XMoveWindow(d, cur->w, (sw - ww) / 2, (sh - wh) / 2);
+
+    if (multimonitor_action(0))
+        XMoveWindow(d, cur->w, (sw - ww) / 2, (sh - wh) / 2);
+
+    win_size(cur->w, &cur->wx, &cur->wy, &cur->ww, &cur->wh);
 }
 
 void win_fs(const Arg arg) {
