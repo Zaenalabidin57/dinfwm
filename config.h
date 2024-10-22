@@ -1,6 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+/* tambah thunar */
+
 #define MOD Mod4Mask
 
 #define BORDER_SELECTED "#77aaff"
@@ -12,7 +14,7 @@
 #define BAR_TEXT_UNSELECTED "#77aaff"
 
 const char* menu[] = {"rofi", "-show", "drun", 0};
-const char* term[] = {"kitty", 0};
+const char* term[] = {"st", 0};
 const char* voldown[] = {"pactl", "set-sink-volume", "0", "5%-", 0};
 const char* volup[] = {"pactl", "set-sink-volume", "0", "5%+", 0};
 const char* volmute[] = {"pactl", "set-sink-mute", "0", "toggle", 0};
@@ -48,7 +50,7 @@ static struct key keys[] = {
 
     {MOD, XK_d, run, {.com = menu}},
     {MOD, XK_o, run, {.com = browser}},
-    {MOD, XK_n, run, {.com = browser}},
+    {MOD, XK_n, run, {.com = thunar}},
     {MOD, XK_Return, run, {.com = term}},
 
     {MOD|ShiftMask, XK_p, run, {.com = lock}},
