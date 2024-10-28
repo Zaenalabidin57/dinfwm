@@ -37,7 +37,7 @@ const char* lock[] = {"i3lock-fancy-dualmonitor", "-p",  0};
 const char* thunar[] = {"thunar", 0};
 
 const char* browser[] = {"firefox", 0};
-const char* emoji[] = {"rofi -modi emoji -show emoji", 0};
+const char* emoji[] = {"rofi", "-modi", "emoji", "-show",  "emoji", 0};
 
 
 static struct key keys[] = {

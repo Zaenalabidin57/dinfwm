@@ -7,7 +7,7 @@ xrandr --output HDMI-A-0 --left-of eDP
 xrandr --output eDP --set TearFree on
 xrandr --output HDMI-A-0 --set TearFree on 
 
-nitrogen --restore &
+feh --bg-tile /home/shigure/Pictures/dinfwm.jpg &
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 xset r rate 200 50 &
 xss-lock --transfer-sleep-lock -- i3locki-fancy-dualmonitor --nofork &
