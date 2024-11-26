@@ -57,10 +57,12 @@ void win_focus(client *c);
 void win_kill(const Arg arg);
 void win_prev(const Arg arg);
 void win_next(const Arg arg);
+void focusmon(const Arg arg);
 void win_to_ws(const Arg arg);
 void ws_go(const Arg arg);
 void update_bar();
 void create_bar();
 void toggle_bar();
+void tagmon(const Arg arg);
 
 static int xerror() { return 0; }

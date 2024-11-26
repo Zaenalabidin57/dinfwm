@@ -63,6 +63,57 @@ void warp(client *c) {
     //int y = c->wy + c->wh / 2;
     XWarpPointer(d, None, c->w, 0, 0, 0, 0, c->ww / 2, c->wh / 2);
 }
+void focusmon(const Arg arg) {
+  if (!XineramaIsActive(d)) return;
+
+  int pointer_x, pointer_y;
+  Window pointer_root, pointer_child;
+  int pointer_root_x, pointer_root_y;
+  unsigned int pointer_mask;
+
+  XQueryPointer(d, root, &pointer_root, &pointer_child, &pointer_root_x, &pointer_root_y, &pointer_x, &pointer_y, &pointer_mask);
+
+  XineramaScreenInfo *si = XineramaQueryScreens(d, &monitors);
+  int current_monitor = 0;
+  for (int i = 0; i < monitors; i++) {
+    if ((pointer_root_x >= si[i].x_org && pointer_root_x < si[i].x_org + si[i].width) && (pointer_root_y >= si[i].y_org && pointer_root_y < si[i].y_org + si[i].height)) {
+      current_monitor = i;
+      break;
+  }
+}
+int target_monitor = (current_monitor + 1) % monitors;
+int target_x = si[target_monitor].x_org + si[target_monitor].width / 2;
+int target_y = si[target_monitor].y_org + si[target_monitor].height / 2;
+
+XWarpPointer(d, None, root, 0, 0, 0, 0, target_x, target_y);
+}
+
+void tagmon(const Arg arg) {
+  if (!XineramaIsActive(d)) return;
+
+  int pointer_x, pointer_y;
+  Window pointer_root, pointer_child;
+  int pointer_root_x, pointer_root_y;
+  unsigned int pointer_mask;
+
+  XQueryPointer(d, root, &pointer_root, &pointer_child, &pointer_root_x, &pointer_root_y, &pointer_x, &pointer_y, &pointer_mask);
+
+  XineramaScreenInfo *si = XineramaQueryScreens(d, &monitors);
+  int current_monitor = 0;
+  for (int i = 0; i < monitors; i++) {
+    if ((pointer_root_x >= si[i].x_org && pointer_root_x < si[i].x_org + si[i].width) && (pointer_root_y >= si[i].y_org && pointer_root_y < si[i].y_org + si[i].height)) {
+      current_monitor = i;
+      break;
+  }
+}
+int target_monitor = (current_monitor + 1) % monitors;
+int target_x = si[target_monitor].x_org + si[target_monitor].width / 4;
+int target_y = si[target_monitor].y_org + si[target_monitor].height / 4;
+
+XMoveWindow(d, cur->w, target_x, target_y);
+XWarpPointer(d, None, root, 0, 0, 0, 0, target_x, target_y);
+  
+}
 
 void notify_destroy(XEvent *e) {
     win_del(e->xdestroywindow.window);
@@ -136,6 +187,36 @@ void win_add(Window w) {
         list = c;
         list->prev = list->next = list;
     }
+
+    //tambahin fitur spawn windows per display
+   int pointer_x, pointer_y;
+   Window pointer_root, pointer_child;
+   int pointer_root_x, pointer_root_y;
+   unsigned int pointer_mask;
+
+   XQueryPointer(d, root, &pointer_root, &pointer_child, &pointer_root_x, &pointer_root_y, &pointer_x, &pointer_y, &pointer_mask);
+
+   int monitor = 0;
+   if (XineramaIsActive(d)) {
+     XineramaScreenInfo *si = XineramaQueryScreens(d, &monitors);
+     for (int i = 0; i < monitors; i++) {
+     if ((pointer_root_x >= si[i].x_org && pointer_root_x < si[i].x_org + si[i].width) &&
+     (pointer_root_y >= si[i].y_org && pointer_root_y < si[i].y_org + si[i].height)) {
+         monitor = i;
+         break;
+         }
+     }
+     if (si[monitor].width == 1920 && si[monitor].height == 1080) {
+       XMoveWindow(d, w, si[monitor].x_org - (1920 / 2), si[monitor].y_org - (1080 / 2));
+     } else if (si[monitor].width == 1366 && si[monitor].height == 768) {
+       XMoveWindow(d, w, si[monitor].x_org - (1366 / 2), si[monitor].y_org - (768 / 2));
+     }
+   } 
+
+   XMoveWindow(d, w, pointer_root_x, pointer_root_y);
+   XMapWindow(d, w);
+
+   win_size(w, &c->wx, &c->wy, &c->ww, &c->wh);
 
     ws_save(ws);
     win_focus(c);
@@ -425,6 +506,7 @@ void update_bar() {
     
     XFlush(d);
 }
+
 
 int main(void) {
     XEvent ev;

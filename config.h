@@ -21,7 +21,7 @@ const char* volmute[] = {"pactl", "set-sink-mute", "0", "toggle", 0};
 const char* light_up[] = {"brightnessctl", "s", "20+", 0};
 const char* light_down[] = {"brightnessctl", "s", "20-", 0};
 
-const char* exitbiji[] = {"st", "-e", "/home/shigure/.config/hypr/exit.sh", 0};
+const char* exitbiji[] = {"st", "-e", "/home/shigure/exit.sh", 0};
 
 const char* Ppause[] = {"playerctl", "play-pause", 0};
 const char* Pplay[] = {"playerctl", "play-pause", 0};
@@ -49,6 +49,12 @@ static struct key keys[] = {
  
     {MOD, XK_k, win_next, {0}},
     {MOD, XK_j, win_prev, {0}},
+
+    {MOD, XK_comma, focusmon, {0}},
+    {MOD, XK_period, focusmon, {0}},
+
+    {MOD|ShiftMask, XK_comma, tagmon, {0}},
+    {MOD|ShiftMask, XK_period, tagmon, {0}},
 
     {MOD, XK_d, run, {.com = menu}},
     {MOD, XK_o, run, {.com = browser}},
