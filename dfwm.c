@@ -14,10 +14,12 @@ static client *list = {0}, *ws_list[10] = {0}, *cur;
 static int ws = 1, sw, sh, wx, wy, numlock = 0, monitors;
 static unsigned int ww, wh;
 
+
 static int s;
 static Display *d;
 static XButtonEvent mouse;
 static Window root, bar;
+
 
 XftFont *xftfont;
 XftColor xftcolor_text_sel;
@@ -52,6 +54,14 @@ void win_focus(client *c) {
     }
 
     XSetInputFocus(d, cur->w, RevertToParent, CurrentTime);
+}
+void warp(client *c) {
+  // make the pointer at the center of the focused window
+  //XWarpPointer(d, None, c->w, 0, 0, 0, 0, c->ww / 2, c->wh / 2);
+  if (!c) return;
+    //int x = c->wx + c->ww / 2;
+    //int y = c->wy + c->wh / 2;
+    XWarpPointer(d, None, c->w, 0, 0, 0, 0, c->ww / 2, c->wh / 2);
 }
 
 void notify_destroy(XEvent *e) {
@@ -247,6 +257,7 @@ void win_prev(const Arg arg) {
     if (!cur) return;
 
     XRaiseWindow(d, cur->prev->w);
+    warp(cur->prev);
     win_focus(cur->prev);
 }
 
@@ -254,6 +265,7 @@ void win_next(const Arg arg) {
     if (!cur) return;
 
     XRaiseWindow(d, cur->next->w);
+    warp(cur->next);
     win_focus(cur->next);
 }
 
